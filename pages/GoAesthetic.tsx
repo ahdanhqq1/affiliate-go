@@ -10,6 +10,8 @@ import { generateSinglePhotoshootImage } from '../services/geminiService';
 import { Download as DownloadIcon, Eye as ZoomIcon, Square as SquareIcon, RectangleHorizontal as RectangleHorizontalIcon, RectangleVertical as RectangleVerticalIcon, RefreshCw, Clock, Image as ImageIcon, Camera as CameraIcon } from '../components/icons/LucideIcons';
 import { ZoomModal } from '../components/ZoomModal';
 import { PromoCard } from '../components/PromoCard';
+import { useAuth } from '../contexts/AuthContext';
+import { db, collection, addDoc, serverTimestamp } from '../firebase';
 
 type AspectRatio = '1:1' | '3:4' | '9:16' | '16:9';
 type Angle = 'eye-level' | 'high-angle' | 'close-up' | 'dutch-angle' | 'detail';
@@ -40,6 +42,7 @@ const getAestheticPrompts = (carpetColor: CarpetColor) => [
 
 export const GoAesthetic: React.FC = () => {
     const { t } = useLanguage();
+    const { user } = useAuth();
     
     // State
     const [sourceImage, setSourceImage] = useState<UploadedImage | null>(null);
@@ -110,8 +113,28 @@ export const GoAesthetic: React.FC = () => {
                     next[i] = { id: i, status: 'done', imageUrl: res.imageUrl };
                     return next;
                 });
+
+                // Save to Firestore
+                if (user && res.imageUrl) {
+                    try {
+                        await addDoc(collection(db, 'enhancements'), {
+                            userId: user.uid,
+                            originalImageUrl: sourceImage.url,
+                            enhancedImageUrl: res.imageUrl,
+                            prompt: fullPrompt,
+                            method: 'Go Aesthetic',
+                            createdAt: serverTimestamp()
+                        });
+                    } catch (fsError) {
+                        console.error('Error saving to Firestore:', fsError);
+                    }
+                }
             } catch (err: any) {
                 console.error(`Error slot ${i}:`, err);
+                if (err.message === 'API_KEY_MISSING') {
+                    setResults([]);
+                    break;
+                }
                 setResults(prev => {
                     if (!prev) return prev;
                     const next = [...prev];

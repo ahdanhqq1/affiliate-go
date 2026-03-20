@@ -22,7 +22,6 @@ export const translations: Translations = {
     goSelfieVip: "Go Selfie VIP",
     goFashion: "Go Fashion",
     goBRoll: "Go B-Roll",
-    povStudio: "Go POV Studio",
     listingStudio: "Go Listing",
     goPose: "Go Pose",
     goGenEditor: "Go Editor",
@@ -39,7 +38,6 @@ export const translations: Translations = {
     goStoryboard: "Go Storyboard",
     goVoice: "Go Voice",
     motionPromptStudio: "Go Motion Prompt",
-    videoStudio: "Studio Video",
     mirrorStudio: "Go Mirror",
     perspectiveStudio: "Go Perspective",
     digitalImaging: "Go Imaging",
@@ -98,8 +96,6 @@ export const translations: Translations = {
     adCreator: "Bikin desain poster iklan otomatis lengkap dengan teks promosi yang menarik.",
     imageEditor: "Edit bagian foto yang nggak dimau, hapus objek, atau ganti detail foto sesuka hati.",
     digitalImaging: "Bikin foto produk yang artistik and unik, kayak editan profesional.",
-    videoStudio: "Hidupkan foto produk yang diam jadi video gerak singkat yang estetik.",
-    povStudio: "Bikin foto seolah-olah produk lagi dipegang tangan kamu (POV), cocok buat review.",
     mirrorStudio: "Bikin foto gaya selfie di depan cermin buat produk fashion atau casing HP.",
     listingStudio: "Bikin gambar info produk (infografis) yang jelas buat ditaruh di marketplace.",
     perspectiveStudio: "Samakan gaya foto produk dari depan, samping, dan belakang biar seragam.",
@@ -239,48 +235,6 @@ export const translations: Translations = {
     generateButton: "✨ Seragamkan Background",
     errors: {
       noImages: "Upload minimal satu sisi foto produk ya."
-    }
-  },
-  povStudio: {
-    page: {
-      title: "Go POV Studio",
-      description: "Bikin foto seolah-olah produk lagi dipegang tangan kamu (POV), cocok buat review."
-    },
-    sections: {
-      upload: {
-        title: "1. Unggah Produk",
-        subtitle: "Foto produknya aja, tanpa tangan."
-      },
-      configure: {
-        title: "2. Atur Gaya",
-        subtitle: "Pilih tangan siapa dan mau di mana fotonya."
-      }
-    },
-    handStyle: {
-      label: "Model Tangan",
-      auto: "Otomatis Aja",
-      female: "Tangan Cewek",
-      male: "Tangan Cowok",
-      sweater: "Pakai Sweater"
-    },
-    background: {
-      modeLabel: "Background",
-      preset: "Pilih Tema",
-      custom: "Upload Sendiri",
-      themeLabel: "Mau suasana apa?"
-    },
-    themes: {
-      cozyBedroom: "Di Kamar Nyaman",
-      aestheticDesk: "Di Meja Kerja Estetik",
-      softMinimalist: "Dinding Polos Minimalis",
-      cafeVibes: "Nongkrong di Kafe",
-      urbanOutdoor: "Jalanan Kota",
-      natureWalk: "Jalan-jalan di Alam",
-      bathroomSelfie: "Di Depan Caca Wastafel",
-    },
-    generateButton: "✨ Buat Foto POV",
-    errors: {
-      noBackground: "Jangan lupa upload backgroundnya ya."
     }
   },
   backgroundChanger: {
@@ -712,48 +666,6 @@ export const translations: Translations = {
       noMask: "Warnai dulu bagian foto yang mau diedit pakai kuas.",
       noPrompt: "Tulis perintahnya dulu, mau diapain bagian itu?"
     }
-  },
-  videoStudio: {
-    page: {
-      title: "Studio Video",
-      description: "Hidupkan foto produk yang diam jadi video gerak singkat yang estetik."
-    },
-    sections: {
-      upload: {
-        title: "1. Unggah Gambar",
-        subtitle: "Pilih foto yang mau digerakkan."
-      },
-      prompt: {
-        title: "2. Mau Gerak Kayak Gimana?",
-        subtitle: "Ceritain gerakannya."
-      }
-    },
-    form: {
-      prompt: {
-        label: "Deskripsi Gerakan",
-        placeholder: "cth., 'Kamera zoom in perlahan ke produk, ada asap tipis mengepul, cahaya berkilauan.'"
-      },
-      goPrompt: {
-        label: "Bantu Bikin Deskripsi",
-        loading: "Mikirin..."
-      }
-    },
-    generateButton: "✨ Bikin Video",
-    loading: {
-      title: "Lagi syuting video...",
-      messages: "[\"Sabar ya, bikin video emang butuh waktu...\",\"Lagi ngatur kamera dan pencahayaan...\",\"Render frame demi frame biar halus...\",\"Dikit lagi jadi kok, hasilnya bakal keren!\"]"
-    },
-    results: {
-      title: "3. Hasil Video",
-      description: "Videomu sudah jadi! Bisa langsung diputar atau didownload.",
-      downloadButton: "Simpan Video",
-      placeholder: "Video hasil karyamu bakal muncul di sini."
-    },
-    errors: {
-      noPrompt: "Tulis dulu deskripsi gerakannya.",
-      noImage: "Upload gambarnya dulu."
-    },
-    quotaWarning: "Info: Fitur Video ini adalah BONUS ujicoba. Google membatasi kuota pembuatan video (sekitar 10 video per akun). Kalau gagal, mungkin kuotanya habis."
   },
   notes: {
     staticWarning: "Demo: Hasil tidak disimpan di server. Langsung download ya kalau sudah jadi.",

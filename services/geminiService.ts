@@ -8,7 +8,6 @@ import {
   AdCopySuggestions,
   PoseStudioMode,
   PoseStudioOptions,
-  PovStudioOptions,
   MirrorStudioOptions,
   ListingStudioOptions,
   PerspectiveStudioOptions,
@@ -71,11 +70,22 @@ async function extractImageFromResponse(response: GenerateContentResponse): Prom
 const PRODUCT_PRESERVATION_PROMPT = "Maintain the EXACT identity, shape, color, and details of the product from the source image. Do not change the product itself, only the environment and lighting around it.";
 
 export const getApiKey = () => {
+    let key = '';
     if (typeof window !== 'undefined') {
-        const savedKey = localStorage.getItem('CUSTOM_GEMINI_API_KEY');
-        if (savedKey) return savedKey;
+        key = localStorage.getItem('CUSTOM_GEMINI_API_KEY') || '';
     }
-    return process.env.API_KEY || '';
+    if (!key) {
+        key = process.env.API_KEY || '';
+    }
+    
+    // Check if key is missing or is a placeholder
+    if (!key || key.trim() === "" || key === 'YOUR_API_KEY') {
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('API_KEY_MISSING'));
+        }
+        throw new Error("API_KEY_MISSING");
+    }
+    return key;
 };
 
 // =================== Go Product Studio ===================
@@ -284,11 +294,14 @@ export const editImage = async (original: UploadedImage, mask: UploadedImage, pr
 
 export const generateVideo = async (prompt: string, image: ImageData) => {
     const ai = new GoogleGenAI({ apiKey: getApiKey() });
+    const base64 = image.dataUrl?.split(',')[1];
+    if (!base64) throw new Error('Invalid image data URL');
+
     let operation = await ai.models.generateVideos({
         model: 'veo-3.1-fast-generate-preview',
         prompt: prompt,
         image: {
-            imageBytes: image.dataUrl.split(',')[1],
+            imageBytes: base64,
             mimeType: image.mimeType,
         },
         config: {
@@ -367,7 +380,9 @@ export const generateMergedImage = async (images: UploadedImage[], prompt: strin
         }
     });
     const imageUrl = await extractImageFromResponse(response);
-    return imageUrl.split(',')[1];
+    const base64 = imageUrl?.split(',')[1];
+    if (!base64) throw new Error('Invalid generated image data');
+    return base64;
 };
 
 // =================== Go Lifestyle ===================
@@ -725,9 +740,12 @@ export const visualizeStoryboardScene = async (panel: StoryboardPanel, aspectRat
 
 export const suggestNextStoryboardScenes = async (lastScene: { visual_prompt: string; narration: string; imageUrl: string }, reference: UploadedImage | null): Promise<StoryboardPanel[]> => {
     const ai = new GoogleGenAI({ apiKey: getApiKey() });
+    const base64 = lastScene.imageUrl?.split(',')[1];
+    if (!base64) throw new Error('Invalid last scene image URL');
+
     const parts: Part[] = [
         { text: `Based on the last scene "${lastScene.narration}", suggest 4 possible next scenes. Return visual_prompt and narration for each in JSON.` },
-        { inlineData: { data: lastScene.imageUrl.split(',')[1], mimeType: 'image/png' } }
+        { inlineData: { data: base64, mimeType: 'image/png' } }
     ];
     if (reference) parts.push(toPart(reference));
 

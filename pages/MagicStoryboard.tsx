@@ -93,7 +93,8 @@ const MagicStoryboard: React.FC = () => {
     const [promptModal, setPromptModal] = useState<{ isOpen: boolean; title: string; content: string }>({ isOpen: false, title: '', content: '' });
 
     const handleImageUpload = (dataUrl: string, mimeType: string) => {
-        const base64 = dataUrl.split(',')[1];
+        const base64 = dataUrl?.split(',')[1];
+        if (!base64) return;
         dispatch({ type: 'SET_FIELD', payload: { field: 'referenceImage', value: { base64, mimeType, dataUrl } } });
     };
 
@@ -108,14 +109,22 @@ const MagicStoryboard: React.FC = () => {
             let previousImage: UploadedImage | null = null;
             for (let i = 0; i < scenes.length; i++) {
                 const res = await visualizeStoryboardScene(scenes[i], aspectRatio, i, referenceImage, previousImage);
+                const base64 = res.imageUrl?.split(',')[1];
                 dispatch({ type: 'UPDATE_PANEL_IMAGE', payload: { index: i, imageUrl: res.imageUrl } });
-                previousImage = {
-                    base64: res.imageUrl.split(',')[1],
-                    mimeType: 'image/png',
-                    name: `scene_${i}.png`
-                };
+                if (base64) {
+                    previousImage = {
+                        base64: base64,
+                        mimeType: 'image/png',
+                        name: `scene_${i}.png`
+                    };
+                }
             }
         } catch (err: any) {
+            console.error(err);
+            if (err.message === 'API_KEY_MISSING') {
+                dispatch({ type: 'GENERATE_FINISH' });
+                return;
+            }
             dispatch({ type: 'GENERATE_ERROR', payload: err.message || 'Gagal merender storyboard.' });
         } finally {
             dispatch({ type: 'GENERATE_FINISH' });
@@ -153,10 +162,13 @@ const MagicStoryboard: React.FC = () => {
 
         dispatch({ type: 'SUGGEST_START' });
         try {
+            const base64 = lastScene.imageUrl?.split(',')[1];
+            if (!base64) throw new Error('Invalid last scene image');
+
             const options = await suggestNextStoryboardScenes(lastScene as any, referenceImage);
             const results = await Promise.all(options.map(opt => 
                 visualizeStoryboardScene(opt, aspectRatio, mainStoryboard.length, referenceImage, {
-                    base64: lastScene.imageUrl!.split(',')[1],
+                    base64: base64,
                     mimeType: 'image/png'
                 })
             ));

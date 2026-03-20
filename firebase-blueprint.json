@@ -14,12 +14,31 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["uid", "email", "isApproved"]
+    },
+    "enhancements": {
+      "title": "Enhancement",
+      "description": "Product photo enhancement record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "originalImageUrl": { "type": "string" },
+        "enhancedImageUrl": { "type": "string" },
+        "prompt": { "type": "string" },
+        "method": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "originalImageUrl", "enhancedImageUrl", "createdAt"]
     }
   },
   "firestore": {
     "users/{userId}": {
       "schema": "users",
       "description": "User documents indexed by their UID"
+    },
+    "enhancements/{enhancementId}": {
+      "schema": "enhancements",
+      "description": "Enhancement records"
     }
   }
 }

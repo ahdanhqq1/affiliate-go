@@ -17,7 +17,6 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
     { label: t('sidebar.productStudio'), desc: t('about.productStudio') },
     { label: t('sidebar.listingStudio'), desc: t('about.listingStudio') },
     { label: t('sidebar.perspectiveStudio'), desc: t('about.perspectiveStudio') },
-    { label: t('sidebar.povStudio'), desc: t('about.povStudio') },
     { label: t('sidebar.mirrorStudio'), desc: t('about.mirrorStudio') },
     { label: t('sidebar.virtualTryOn'), desc: t('about.virtualTryOn') },
     { label: t('sidebar.lifestylePhotoshoot'), desc: t('about.lifestylePhotoshoot') },

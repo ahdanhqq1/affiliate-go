@@ -18,16 +18,25 @@ import { FeatureGuide } from './pages/FeatureGuide';
 import { Login } from './components/auth/Login';
 import { PendingApproval } from './components/auth/PendingApproval';
 import Loader from './components/Loader';
+import { History } from './pages/History';
 
 import { AdminPanel } from './pages/AdminPanel';
 import { Settings } from './pages/Settings';
+import { ApiKeyModal } from './components/ApiKeyModal';
 
-export type View = 'home' | 'featureGuide' | 'virtualTryOn' | 'goAesthetic' | 'goKids' | 'goFamily' | 'goModelVip' | 'goCermin' | 'goClean' | 'goSelfieVip' | 'goSetup' | 'admin' | 'settings';
+export type View = 'home' | 'featureGuide' | 'virtualTryOn' | 'goAesthetic' | 'goKids' | 'goFamily' | 'goModelVip' | 'goCermin' | 'goClean' | 'goSelfieVip' | 'goSetup' | 'history' | 'admin' | 'settings';
 
 function AppContent() {
   const { t } = useLanguage();
   const { user, profile, loading } = useAuth();
   const [activeView, setActiveView] = useState<View>('home');
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
+
+  React.useEffect(() => {
+    const handleMissingKey = () => setIsApiKeyModalOpen(true);
+    window.addEventListener('API_KEY_MISSING', handleMissingKey);
+    return () => window.removeEventListener('API_KEY_MISSING', handleMissingKey);
+  }, []);
 
   const handleNavigate = (view: View) => {
     setActiveView(view);
@@ -61,6 +70,7 @@ function AppContent() {
         case 'goClean': return <GoClean />;
         case 'goSelfieVip': return <GoSelfieVip />;
         case 'goSetup': return <GoSetup />;
+        case 'history': return <History />;
         case 'admin': return <AdminPanel />;
         case 'settings': return <Settings />;
         default: return <HomePage />;
@@ -70,6 +80,14 @@ function AppContent() {
   return (
     <Layout activeView={activeView} setActiveView={handleNavigate}>
       {renderActiveView()}
+      <ApiKeyModal 
+        isOpen={isApiKeyModalOpen} 
+        onClose={() => setIsApiKeyModalOpen(false)} 
+        onGoToSettings={() => {
+          setIsApiKeyModalOpen(false);
+          handleNavigate('settings');
+        }} 
+      />
     </Layout>
   );
 }

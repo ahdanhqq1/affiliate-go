@@ -50,6 +50,15 @@ service cloud.firestore {
              data.createdAt is timestamp;
     }
 
+    function isValidEnhancement(data) {
+      return data.keys().hasAll(['id', 'userId', 'originalImageUrl', 'enhancedImageUrl', 'createdAt']) &&
+             data.id is string &&
+             data.userId is string &&
+             data.originalImageUrl is string &&
+             data.enhancedImageUrl is string &&
+             data.createdAt is timestamp;
+    }
+
     // ===============================================================
     // Rules
     // ===============================================================
@@ -70,6 +79,14 @@ service cloud.firestore {
       // Admin can update any user (e.g., to approve them)
       // Admin email can update its own profile to be admin/approved
       allow update: if (isAdmin() || (isOwner(userId) && isAdminEmail())) && isValidUser(request.resource.data);
+    }
+
+    match /enhancements/{enhancementId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if isAuthenticated() && 
+                      request.auth.uid == request.resource.data.userId &&
+                      isValidEnhancement(request.resource.data);
+      allow update, delete: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
     }
 
     // Default deny

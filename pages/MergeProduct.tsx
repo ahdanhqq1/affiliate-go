@@ -77,7 +77,9 @@ export const MergeProduct: React.FC = () => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const dataUrl = e.target?.result as string;
+                if (!dataUrl) return;
                 const parts = dataUrl.split(',');
+                if (parts.length < 2) return;
                 const mimeType = parts[0].match(/:([A-Za-z0-9-.+\/]+);/)?.[1] || 'image/png';
                 const base64 = parts[1];
 
@@ -173,6 +175,10 @@ export const MergeProduct: React.FC = () => {
                 });
             } catch (err: any) {
                 console.error(`Variation ${i} failed:`, err);
+                if (err.message === 'API_KEY_MISSING') {
+                    setResults([]);
+                    break;
+                }
                 setResults(prev => {
                     if (!prev) return prev;
                     const next = [...prev];

@@ -80,22 +80,6 @@ export enum ImageEditorMode {
   MAGIC_BRUSH = 'Magic Brush',
 }
 
-// POV Studio Types
-export enum PovHandStyle {
-  AUTO = 'Auto',
-  FEMALE = 'Female Hand',
-  MALE = 'Male Hand',
-  SWEATER = 'Sweater/Long Sleeve'
-}
-
-export interface PovStudioOptions {
-  handStyle: PovHandStyle;
-  backgroundMode: 'preset' | 'custom';
-  theme: string; // Key from POV_THEMES
-  customTheme: string;
-  instructions: string;
-}
-
 // Mirror Studio Types
 export interface MirrorStudioOptions {
   modelSource: 'generate' | 'upload';
@@ -217,12 +201,10 @@ export type View =
   | 'mergeProduct' 
   | 'digitalImaging' 
   | 'adCreator' 
-  | 'povStudio' 
   | 'mirrorStudio' 
   | 'listingStudio' 
   | 'perspectiveStudio' 
   | 'backgroundChanger' 
-  | 'videoStudio' 
   | 'magicBRoll' 
   | 'magicGenEditor' 
   | 'magicCarousel' 

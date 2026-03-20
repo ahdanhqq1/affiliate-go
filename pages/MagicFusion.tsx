@@ -46,7 +46,9 @@ const UploadBox: React.FC<{
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const url = e.target?.result as string;
+                    if (!url) return;
                     const parts = url.split(',');
+                    if (parts.length < 2) return;
                     const mimeType = processedFile.type || 'image/jpeg';
                     const base64 = parts[1];
                     onUpload({ base64, mimeType, url });
@@ -126,7 +128,9 @@ const GoFusion: React.FC = () => {
         setModalContent(<Loader message="Membuat prompt..." />);
         setIsModalOpen(true);
         try {
-            const [,base64Data] = generatedData.src.split(',');
+            const parts = generatedData.src.split(',');
+            if (parts.length < 2) throw new Error('Invalid generated image data');
+            const base64Data = parts[1];
             const systemPrompt = `You are a prompt engineering expert. Given an image, generate four different text-to-image prompts that could create it, tailored for specific models: Midjourney, Stable Diffusion, Leonardo AI, and a general one for Google's models. Respond ONLY with a valid JSON object with keys: "midjourney", "stableDiffusion", "leonardo", and "nanoBanana".`;
             const promptsJson = await generateContent(
                 "Generate T2I prompts for this image.",

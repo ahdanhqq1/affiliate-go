@@ -77,8 +77,11 @@ export const ProductStudio: React.FC<{ onNavigate: any }> = ({ onNavigate }) => 
                 const res = await generateGoProductImage(productImage, concepts[i].prompt, aspectRatio);
                 setResults(prev => prev.map(item => item.id === i ? { ...item, status: 'done', imageUrl: res.imageUrl } : item));
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
+            if (e.message === 'API_KEY_MISSING') {
+                setResults([]);
+            }
         } finally {
             setIsLoading(false);
         }

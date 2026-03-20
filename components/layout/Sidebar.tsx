@@ -5,7 +5,7 @@ import type { View } from '../../App';
 import { TryOnIcon } from '../icons/TryOnIcon';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { SparklesIcon } from '../icons/SparklesIcon';
-import { X, Users, Smile, ShieldCheck, Eraser, ScanFace, Monitor, Info } from '../icons/LucideIcons';
+import { X, Users, Smile, ShieldCheck, Eraser, ScanFace, Monitor, Info, Video, Camera, Clock } from '../icons/LucideIcons';
 import { HomeIcon } from '../icons/HomeIcon';
 import { MirrorIcon } from '../icons/MirrorIcon';
 
@@ -50,6 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, isM
         title: "General",
         items: [
           { id: 'home', label: t('sidebar.home'), icon: <HomeIcon /> },
+          { id: 'history', label: t('History Generate'), icon: <Clock /> },
           { id: 'featureGuide', label: "Panduan Fitur", icon: <Info /> },
         ]
       },
@@ -98,7 +99,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, isM
         `}>
             <div className="h-full flex flex-col bg-white border-4 border-cartoon-dark rounded-[2.5rem] shadow-cartoon-lg overflow-hidden">
                 <div className="p-5 border-b-4 border-cartoon-dark bg-cartoon-blue text-white flex items-center justify-between">
-                     <span className="text-lg font-black italic">MENU GO</span>
+                     <span className="text-lg font-black italic">AFFILIATE GO</span>
                      <button onClick={onMobileClose} className="md:hidden">
                         <X className="w-6 h-6" />
                      </button>

@@ -11,9 +11,12 @@ import { StepHeader } from '../components/StepHeader';
 import { PromoCard } from '../components/PromoCard';
 import { ZoomModal } from '../components/ZoomModal';
 import { Download as DownloadIcon, Eye as ZoomIcon, RefreshCw, User, ShoppingBag, Info } from '../components/icons/LucideIcons';
+import { useAuth } from '../contexts/AuthContext';
+import { db, collection, addDoc, serverTimestamp } from '../firebase';
 
 export const VirtualTryOn: React.FC = () => {
     const { t } = useLanguage();
+    const { user } = useAuth();
     
     // Input State
     const [modelImage, setModelImage] = useState<ImageData | null>(null);
@@ -72,6 +75,22 @@ export const VirtualTryOn: React.FC = () => {
                 aspectRatio
             );
             setResultImage(result.imageUrl);
+
+            // Save to Firestore
+            if (user && result.imageUrl) {
+                try {
+                    await addDoc(collection(db, 'enhancements'), {
+                        userId: user.uid,
+                        originalImageUrl: productImage.url,
+                        enhancedImageUrl: result.imageUrl,
+                        prompt: `Virtual Try-On with model ${modelImage.url}`,
+                        method: 'Virtual Try-On',
+                        createdAt: serverTimestamp()
+                    });
+                } catch (fsError) {
+                    console.error('Error saving to Firestore:', fsError);
+                }
+            }
         } catch (e: any) {
             console.error(e);
             setError(e.message || "An unexpected error occurred.");

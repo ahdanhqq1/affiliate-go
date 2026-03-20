@@ -135,6 +135,10 @@ export const GoKids: React.FC = () => {
                 });
             } catch (err: any) {
                 console.error(`Error slot ${i}:`, err);
+                if (err.message === 'API_KEY_MISSING') {
+                    setResults([]);
+                    break;
+                }
                 setResults(prev => {
                     if (!prev) return prev;
                     const next = [...prev];
